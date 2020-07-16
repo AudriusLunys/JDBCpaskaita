@@ -16,45 +16,40 @@ public class ScannerInserter {
         String url = "jdbc:mysql://localhost:3306/testdb?useSSL=false";
         String username = "root";
         String password = "Hjrt5579";
-        List<Baldai> balduSarasas = fetchBaldaiFromDB(url, username, password);
         Scanner scn = new Scanner(System.in);
+        List<Baldai> balduSarasas = new ArrayList<Baldai>();
 
         addValuesToBaldai(url, username, password, scn);
-        fetchBaldaiFromDB(url, username, password);
-
+        FetchBaldaiFromDB(url, username, password, balduSarasas);
+        PrintBaldaiList(balduSarasas);
 
     }
 
-    private static List<Baldai> fetchBaldaiFromDB(String url, String username, String password) {
-        List<Baldai> balduSarasas = null;
+    private static void PrintBaldaiList(List<Baldai> balduSarasas) {
+        System.out.println("***DISPLAY BALDU SARASAS***");
+        for (Baldai baldas : balduSarasas) {
+            System.out.println(" ID " + baldas.getId() + " PREKES pavadinimas " + baldas.getName() +
+                    " PREKES svoris " + baldas.getSvoris() + " PREKES kaina " + baldas.getKaina());
+        }
+    }
+
+    private static void FetchBaldaiFromDB(String url, String username, String password, List<Baldai> balduSarasas) {
         try {
             Connection connection = DriverManager.getConnection(url, username, password);
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery("SELECT * FROM baldai");
-            balduSarasas = new ArrayList<Baldai>();
+
             while (resultSet.next()) {
                 Baldai baldai = new Baldai();
                 baldai.setId(resultSet.getInt("id"));
                 baldai.setName(resultSet.getString("name"));
-                baldai.setKaina(resultSet.getInt("kaina"));
                 baldai.setSvoris(resultSet.getInt("svoris"));
+                baldai.setKaina(resultSet.getInt("kaina"));
                 balduSarasas.add(baldai);
-
-                }
-               for (Baldai baldas : balduSarasas) {
-                System.out.println("ID: " + baldas.getId() + " Name: " + baldas.getName() + " kaina " + baldas.getKaina()
-                        + " svoris " + baldas.getSvoris());
-                connection.close();
-
             }
-            statement.close();
-            resultSet.close();
-
-
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
-        return balduSarasas;
     }
 
     private static void addValuesToBaldai(String url, String username, String password, Scanner scn) {
@@ -71,16 +66,11 @@ public class ScannerInserter {
                 int svoris = scn.nextInt();
                 String sqlString = "INSERT INTO baldai (name, kaina, svoris) " +
                         "VALUES ('" + vardas + "', " + kaina + ", " + svoris + ")";
-
                 statement.executeUpdate(sqlString);
                 System.out.println("all good");
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
-
-
-
-
     }
 }
