@@ -1,6 +1,12 @@
 package JDBC;
 
 public class Baldai {
+
+    private int id;
+    private String name;
+    private int kaina;
+    private int svoris;
+
     public int getId() {
         return id;
     }
@@ -17,7 +23,19 @@ public class Baldai {
         this.name = name;
     }
 
-    private int id;
-    private String name;
+    public int getKaina() {
+        return kaina;
+    }
 
+    public void setKaina(int kaina) {
+        this.kaina = kaina;
+    }
+
+    public int getSvoris() {
+        return svoris;
+    }
+
+    public void setSvoris(int svoris) {
+        this.svoris = svoris;
+    }
 }
